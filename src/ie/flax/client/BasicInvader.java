@@ -30,7 +30,7 @@ public class BasicInvader extends GameObject {
 
     @Override
     public void draw() {
-        ps.draw("#00FF00");
+        ps.draw("#00FF10");
         // don't draw primary body, it doesn't exist
     }
 
