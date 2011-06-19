@@ -2,7 +2,7 @@ package ie.flax.client;
 
 import org.jbox2d.dynamics.BodyType;
 
-public class PixelBlock extends GameObject {
+public class PixelBlock extends PhysicsObject {
 
     public PixelBlock(float x, float y, int w, int h, BodyType t) {
         super(x, y, w, h, t);
@@ -10,13 +10,12 @@ public class PixelBlock extends GameObject {
 
     @Override
     public void draw() {
-        PhysicsInvaders.ctx.setFillStyle("#00FF00");
+        // PhysicsInvaders.ctx.setFillStyle("#00FF00");
         super.draw();
     }
 
     @Override
     public void update() {
-        // this.pos = body.getPosition().mul(PhysicsInvaders.PTM_RATIO);
         super.update();
     }
 }

@@ -23,9 +23,11 @@ public class PhysicsInvaders implements EntryPoint {
     public static World world;
     public static final int PTM_RATIO = 30; // 30 pixels to every metre, change
                                             // this later on maybe.
+    public static final int PTP_RATIO = 5; // 5 pixels to every "pixel"
+
     final float FRAMES_PER_SECOND = 35.0f;
 
-    ArrayList<GameObject> listOfObjects = new ArrayList<GameObject>();
+    ArrayList<IGameObject> listOfObjects = new ArrayList<IGameObject>();
     public boolean endGame = false;
 
     @Override
@@ -51,7 +53,7 @@ public class PhysicsInvaders implements EntryPoint {
         int y = 50;
         // for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 4; j++) {
-            BasicInvader bi = new BasicInvader(x, y, 50, 50);
+            BasicInvader bi = new BasicInvader(x, y);
             listOfObjects.add(bi);
             x += 60;
         }
@@ -98,13 +100,13 @@ public class PhysicsInvaders implements EntryPoint {
         ctx.setFillStyle("#FFFF00");
         ctx.fillRect(0, 0, canvas.getCoordinateSpaceWidth(),
                 canvas.getCoordinateSpaceHeight());
-        for (GameObject i : listOfObjects) {
+        for (IGameObject i : listOfObjects) {
             i.draw();
         }
     }
 
     private boolean update() {
-        for (GameObject i : listOfObjects) {
+        for (IGameObject i : listOfObjects) {
             i.update();
         }
 

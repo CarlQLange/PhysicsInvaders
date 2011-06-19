@@ -6,7 +6,13 @@ import org.jbox2d.dynamics.BodyType;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 
-public class PlayerShip extends GameObject {
+/*
+ * TODO At some point you're gonna wanna change this from directly inheriting
+ * PhysicsObject However, this works for the moment. On top of that, adding
+ * another like 70 pixel blocks? Probably not great from a performance point of
+ * view.
+ */
+public class PlayerShip extends PhysicsObject {
     public PlayerShip(float x, float y, int w, int h) {
         super(x, y, w, h, BodyType.STATIC);
 
@@ -41,7 +47,6 @@ public class PlayerShip extends GameObject {
         this.body.m_fixtureList.m_filter.groupIndex = 1;
     }
 
-    @Override
     public void draw() {
 
         PhysicsInvaders.ctx.setFillStyle("#000000");
