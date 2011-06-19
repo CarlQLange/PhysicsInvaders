@@ -27,7 +27,7 @@ public class PhysicsInvaders implements EntryPoint {
 
     final float FRAMES_PER_SECOND = 35.0f;
 
-    ArrayList<IGameObject> listOfObjects = new ArrayList<IGameObject>();
+    public static ArrayList<IGameObject> listOfObjects = new ArrayList<IGameObject>();
     public boolean endGame = false;
 
     @Override
@@ -51,15 +51,15 @@ public class PhysicsInvaders implements EntryPoint {
     private void setupInvadersDebug() {
         int x = 200;
         int y = 50;
-        // for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 5; i++) {
+            // for (int j = 0; j < 4; j++) {
             BasicInvader bi = new BasicInvader(x, y);
             listOfObjects.add(bi);
             x += 60;
+            // }
+            x = 200;
+            y += 60;
         }
-        x = 50;
-        y += 60;
-        // }
     }
 
     private void initWorld() {

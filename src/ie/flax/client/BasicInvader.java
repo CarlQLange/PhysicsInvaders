@@ -67,9 +67,8 @@ public class BasicInvader implements IGameObject {
                         together = false;
                     }
                 }
+                i.body.setLinearVelocity((new Vec2(0, -0.1f)));
             }
         }
-
-        // super.update();
     }
 }

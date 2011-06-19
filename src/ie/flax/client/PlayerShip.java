@@ -34,6 +34,8 @@ public class PlayerShip extends PhysicsObject {
                     body.setLinearVelocity(new Vec2(0, -3));
                 } else if (event.getCharCode() == 's') {
                     body.setLinearVelocity(new Vec2(0, 3));
+                } else if (event.getCharCode() == ' ') {
+                    fire();
                 }
             }
         }, KeyPressEvent.getType());
@@ -50,8 +52,14 @@ public class PlayerShip extends PhysicsObject {
     }
 
     public void draw() {
-
         PhysicsInvaders.ctx.setFillStyle("#000000");
         super.draw();
+    }
+
+    private void fire() {
+        Bullet b = new Bullet((this.pos.x) * PhysicsInvaders.PTM_RATIO
+                + (this.width / PhysicsInvaders.PTM_RATIO / 2), this.pos.y
+                * PhysicsInvaders.PTM_RATIO - this.height);
+        PhysicsInvaders.listOfObjects.add(b);
     }
 }
