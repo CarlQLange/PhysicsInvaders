@@ -15,6 +15,7 @@ public class Bullet implements IGameObject {
 
         for (PixelBlock i : ps.listOfPixelBlocks) {
             i.body.setLinearVelocity(new Vec2(0, -20));
+            i.aggressiveSleep = false;
         }
     }
 
