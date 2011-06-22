@@ -16,6 +16,26 @@ import com.google.gwt.user.client.ui.RootPanel;
  * view.
  */
 public class PlayerShip extends PhysicsObject {
+	int health;
+	int score;
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
 	public PlayerShip(float x, float y, int w, int h) {
 		super(x, y, w, h, BodyType.KINEMATIC);
 		RootPanel.get().addDomHandler(new KeyPressHandler() {
@@ -53,7 +73,10 @@ public class PlayerShip extends PhysicsObject {
 								.add(vel));
 				}
 				if (event.getCharCode() == ' ') {
-					fire();
+					fireBullet();
+				}
+				if (event.getCharCode() == 'l') {
+					setHealth(100);
 				}
 			}
 		}, KeyPressEvent.getType());
@@ -75,7 +98,7 @@ public class PlayerShip extends PhysicsObject {
 		super.draw();
 	}
 
-	private void fire() {
+	private void fireBullet() {
 		Bullet b = new Bullet((this.pos.x) * PhysicsInvaders.PTM_RATIO
 				+ (this.width / PhysicsInvaders.PTM_RATIO / 2), this.pos.y
 				* PhysicsInvaders.PTM_RATIO - this.height * 2);
