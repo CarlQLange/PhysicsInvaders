@@ -28,7 +28,7 @@ public class PhysicsInvaders implements EntryPoint {
 	public static Hud hud;
 	public static final int PTM_RATIO = 30; // 30 pixels to every metre, change
 											// this later on maybe.
-	public static final int PTP_RATIO = 15; // 5 pixels to every "pixel"
+	public static final int PTP_RATIO = 5; // 5 pixels to every "pixel"
 	final float FRAMES_PER_SECOND = 35.0f;
 
 	public static ArrayList<IGameObject> listOfObjects = new ArrayList<IGameObject>();
@@ -46,11 +46,11 @@ public class PhysicsInvaders implements EntryPoint {
 	private void initGame() {
 		initWorld();
 
-		listOfObjects.add(new PlayerShip(300, 650, 90, 30));
+		listOfObjects.add(new PlayerShip(300, 650));
 		hud.drawString("WHAT", 50, 50);
 		// listOfObjects.add(new BasicInvader(200, 50, 100, 100));
 
-		// setupInvadersDebug();
+		setupInvadersDebug();
 
 	}
 
@@ -58,10 +58,10 @@ public class PhysicsInvaders implements EntryPoint {
 		int x = 100;
 		int y = 50;
 		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 8; j++) {
+			for (int j = 0; j < 16; j++) {
 				BasicInvader bi = new BasicInvader(x, y);
 				listOfObjects.add(bi);
-				x += 170;
+				x += 90;
 			}
 			x = 100;
 			y += 170;
@@ -179,7 +179,7 @@ public class PhysicsInvaders implements EntryPoint {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == 'q') {
 					endGame = !endGame;
-					gameLoopReqAnimFram();
+					gameLoopTimer();
 				}
 			}
 		}, KeyPressEvent.getType());

@@ -1,6 +1,5 @@
 package ie.flax.client;
 
-import org.jbox2d.collision.shapes.MassData;
 import org.jbox2d.common.Vec2;
 
 public class Bullet implements IGameObject {
@@ -11,11 +10,8 @@ public class Bullet implements IGameObject {
 		ps = new PixelSprite(new Vec2(x, y), 1, new int[][] { { 1 }, { 1 },
 				{ 1 } });
 
-		MassData md = new MassData();
-		md.mass = 100.0f;
-
 		for (PixelBlock i : ps.listOfPixelBlocks) {
-			i.body.setMassData(md);
+			i.body.m_mass = 50.0f;
 			i.body.setLinearVelocity(new Vec2(0, -20));
 			i.aggressiveSleep = false;
 		}

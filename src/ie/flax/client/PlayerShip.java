@@ -15,9 +15,11 @@ import com.google.gwt.user.client.ui.RootPanel;
  * another like 70 pixel blocks? Probably not great from a performance point of
  * view.
  */
-public class PlayerShip extends PhysicsObject {
+public class PlayerShip implements IGameObject {
 	int health;
 	int score;
+	Vec2 pos;
+	PixelSprite ps;
 
 	public int getHealth() {
 		return health;
@@ -36,8 +38,24 @@ public class PlayerShip extends PhysicsObject {
 		this.score = score;
 	}
 
-	public PlayerShip(float x, float y, int w, int h) {
-		super(x, y, w, h, BodyType.KINEMATIC);
+	public PlayerShip(float x, float y) {
+		// super(x, y, w, h, BodyType.KINEMATIC);
+		ps = new PixelSprite(new Vec2(x, y), 1, new int[][] {
+				{ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+				{ 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } });
+
+		for (PixelBlock i : ps.listOfPixelBlocks) {
+			i.body.setType(BodyType.DYNAMIC);
+			i.aggressiveSleep = false;
+		}
+
+		pos = new Vec2(x, y);
+
 		RootPanel.get().addDomHandler(new KeyPressHandler() {
 
 			@Override
@@ -46,31 +64,18 @@ public class PlayerShip extends PhysicsObject {
 				 * FIXME: Not the correct way to move this body. Do it by
 				 * applying force instead.
 				 */
-				Vec2 vel;
 				if (event.getCharCode() == 'd') {
-					vel = new Vec2(6, 0);
-					if (body.getLinearVelocity().x <= vel.x)
-						body.setLinearVelocity(body.getLinearVelocity()
-								.add(vel));
+					setVelocity(new Vec2(6, 0));
 				}
 				if (event.getCharCode() == 'a') {
-					vel = new Vec2(-6, 0);
-					if (body.getLinearVelocity().x >= vel.x)
-						body.setLinearVelocity(body.getLinearVelocity()
-								.add(vel));
+					setVelocity(new Vec2(-6, 0));
+
 				}
 				if (event.getCharCode() == 'w') {
-					body.setLinearVelocity(new Vec2(0, -6));
-					vel = new Vec2(0, -6);
-					if (body.getLinearVelocity().y >= vel.y)
-						body.setLinearVelocity(body.getLinearVelocity()
-								.add(vel));
+					setVelocity(new Vec2(0, -6));
 				}
 				if (event.getCharCode() == 's') {
-					vel = new Vec2(0, 6);
-					if (body.getLinearVelocity().y <= vel.y)
-						body.setLinearVelocity(body.getLinearVelocity()
-								.add(vel));
+					setVelocity(new Vec2(0, 6));
 				}
 				if (event.getCharCode() == ' ') {
 					fireBullet();
@@ -86,22 +91,43 @@ public class PlayerShip extends PhysicsObject {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeEvent().getKeyCode() != ' ')
-					body.setLinearVelocity(new Vec2(0, 0));
+					for (PixelBlock i : ps.listOfPixelBlocks)
+						i.body.setLinearVelocity(new Vec2(0, 0));
 			}
 		}, KeyUpEvent.getType());
-
-		this.body.m_fixtureList.m_filter.groupIndex = 1;
 	}
 
 	public void draw() {
 		PhysicsInvaders.ctx.setFillStyle("#000000");
-		super.draw();
+		ps.draw();
+	}
+
+	public void update() {
+		ps.update();
+		this.pos = ps.listOfPixelBlocks.get(0).pos;
+		for (PixelBlock i : ps.listOfPixelBlocks) {
+			// -250ish
+			i.body.applyForce(
+					PhysicsInvaders.world.getGravity().negate()
+							.mul(i.body.getMass()), i.body.getPosition());
+		}
 	}
 
 	private void fireBullet() {
+		PhysicsInvaders.ctx.setFillStyle("#F0F000");
 		Bullet b = new Bullet((this.pos.x) * PhysicsInvaders.PTM_RATIO
-				+ (this.width / PhysicsInvaders.PTM_RATIO / 2), this.pos.y
-				* PhysicsInvaders.PTM_RATIO - this.height * 2);
+				+ (this.ps.width / PhysicsInvaders.PTM_RATIO / 2), this.pos.y
+				* PhysicsInvaders.PTM_RATIO - this.ps.height * 2);
 		PhysicsInvaders.listOfObjects.add(b);
+	}
+
+	/*
+	 * This method only serves to clean up the onKeyPress above.
+	 */
+	private void setVelocity(Vec2 vel) {
+		for (PixelBlock i : ps.listOfPixelBlocks) {
+			// i.body.setLinearVelocity(vel);
+			i.body.setLinearVelocity(i.body.getLinearVelocity().add(vel));
+		}
 	}
 }

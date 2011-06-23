@@ -12,61 +12,64 @@ import org.jbox2d.dynamics.BodyType;
  * What you could do could be something like passing in an RGB value instead.
  */
 public class PixelSprite implements IGameObject {
-    ArrayList<PixelBlock> listOfPixelBlocks = new ArrayList<PixelBlock>();
+	ArrayList<PixelBlock> listOfPixelBlocks = new ArrayList<PixelBlock>();
+	int width, height;
 
-    public PixelSprite(Vec2 pos, float w, float h, int group, int[][] map) {
-        // height, width of each pixelblock
-        int blockHeight = (int) (h / map.length);
-        int blockWidth = (int) (w / map[0].length);
+	public PixelSprite(Vec2 pos, float w, float h, int group, int[][] map) {
+		// height, width of each pixelblock
+		int blockHeight = (int) (h / map.length);
+		int blockWidth = (int) (w / map[0].length);
+		width = map[0].length;
+		height = map.length;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if (map[i][j] != 0) {
+					listOfPixelBlocks.add(new PixelBlock(
+							((pos.x + (blockWidth * j))),
+							((pos.y + (blockHeight * i))), blockWidth,
+							blockHeight, BodyType.DYNAMIC));
+				}
+			}
+		}
 
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j] != 0) {
-                    listOfPixelBlocks.add(new PixelBlock(
-                            ((pos.x + (blockWidth * j))),
-                            ((pos.y + (blockHeight * i))), blockWidth,
-                            blockHeight, BodyType.DYNAMIC));
-                }
-            }
-        }
+		for (PixelBlock i : listOfPixelBlocks) {
+			i.body.m_fixtureList.m_filter.groupIndex = group;
+			i.body.setSleepingAllowed(true);
+		}
+	}
 
-        for (PixelBlock i : listOfPixelBlocks) {
-            i.body.m_fixtureList.m_filter.groupIndex = group;
-            i.body.setSleepingAllowed(true);
-        }
-    }
+	public PixelSprite(Vec2 pos, int group, int[][] map) {
+		// height, width of each pixelblock
+		int blockHeight = PhysicsInvaders.PTP_RATIO;
+		int blockWidth = PhysicsInvaders.PTP_RATIO;
+		width = map[0].length;
+		height = map.length;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if (map[i][j] != 0) {
+					listOfPixelBlocks.add(new PixelBlock(
+							((pos.x + (blockWidth * j))),
+							((pos.y + (blockHeight * i))), blockWidth,
+							blockHeight, BodyType.DYNAMIC));
+				}
+			}
+		}
 
-    public PixelSprite(Vec2 pos, int group, int[][] map) {
-        // height, width of each pixelblock
-        int blockHeight = PhysicsInvaders.PTP_RATIO;
-        int blockWidth = PhysicsInvaders.PTP_RATIO;
+		for (PixelBlock i : listOfPixelBlocks) {
+			i.body.m_fixtureList.m_filter.groupIndex = group;
+			i.body.setSleepingAllowed(true);
+		}
+	}
 
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j] != 0) {
-                    listOfPixelBlocks.add(new PixelBlock(
-                            ((pos.x + (blockWidth * j))),
-                            ((pos.y + (blockHeight * i))), blockWidth,
-                            blockHeight, BodyType.DYNAMIC));
-                }
-            }
-        }
+	public void draw() {
+		for (PixelBlock i : listOfPixelBlocks) {
+			i.draw();
+		}
+	}
 
-        for (PixelBlock i : listOfPixelBlocks) {
-            i.body.m_fixtureList.m_filter.groupIndex = group;
-            i.body.setSleepingAllowed(true);
-        }
-    }
-
-    public void draw() {
-        for (PixelBlock i : listOfPixelBlocks) {
-            i.draw();
-        }
-    }
-
-    public void update() {
-        for (PixelBlock i : listOfPixelBlocks) {
-            i.update();
-        }
-    }
+	public void update() {
+		for (PixelBlock i : listOfPixelBlocks) {
+			i.update();
+		}
+	}
 }
