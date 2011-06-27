@@ -5,7 +5,7 @@ package ie.flax.client;
  * implement this.
  */
 public interface IGameObject {
-    public void draw();
+	public void draw();
 
-    public void update();
+	public void update();
 }

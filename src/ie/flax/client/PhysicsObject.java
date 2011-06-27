@@ -7,8 +7,6 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
-import com.google.gwt.canvas.dom.client.Context2d;
-
 public class PhysicsObject implements IGameObject {
 	/*
 	 * These hold the PIXEL VALUES. Divide them by the PTM ratio before passing
@@ -47,31 +45,10 @@ public class PhysicsObject implements IGameObject {
 	}
 
 	public void draw() {
-		drawVertices(this.shape);
+
 	}
 
 	public void update() {
 		pos = body.getPosition();
-	}
-
-	protected void drawVertices(PolygonShape ps) {
-		Context2d $ = PhysicsInvaders.ctx; // I am a lazy, lazy man.
-		// $.moveTo(this.pos.x, this.pos.y);
-		$.save();
-		$.translate(pos.x * PhysicsInvaders.PTM_RATIO, pos.y
-				* PhysicsInvaders.PTM_RATIO);
-		$.rotate(body.getAngle());
-		$.scale(PhysicsInvaders.PTM_RATIO, PhysicsInvaders.PTM_RATIO);
-
-		$.beginPath();
-		$.moveTo(0, 0);
-		Vec2[] vec2 = ps.getVertices();
-		for (int i = 0; i < ps.getVertexCount(); i++) {
-			$.lineTo(vec2[i].x, vec2[i].y);
-		}
-		$.lineTo(vec2[0].x, vec2[0].y);
-		$.closePath();
-		$.fill();
-		$.restore();
 	}
 }

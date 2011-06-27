@@ -2,6 +2,7 @@ package ie.flax.client;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.contacts.Contact;
 
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
@@ -20,6 +21,7 @@ public class PlayerShip implements IGameObject {
 	int score;
 	Vec2 pos;
 	PixelSprite ps;
+	boolean together = true;
 
 	public int getHealth() {
 		return health;
@@ -27,7 +29,8 @@ public class PlayerShip implements IGameObject {
 
 	public void setHealth(int health) {
 		this.health = health;
-
+		// remove this line when merging
+		PhysicsInvaders.dm.getHud().drawString(health + "", 50, 500);
 	}
 
 	public int getScore() {
@@ -40,7 +43,7 @@ public class PlayerShip implements IGameObject {
 
 	public PlayerShip(float x, float y) {
 		// super(x, y, w, h, BodyType.KINEMATIC);
-		ps = new PixelSprite(new Vec2(x, y), 1, new int[][] {
+		ps = new PixelSprite(new Vec2(x, y), -2, false, "#000000", new int[][] {
 				{ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
 				{ 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
@@ -98,7 +101,6 @@ public class PlayerShip implements IGameObject {
 	}
 
 	public void draw() {
-		PhysicsInvaders.ctx.setFillStyle("#000000");
 		ps.draw();
 	}
 
@@ -111,10 +113,24 @@ public class PlayerShip implements IGameObject {
 					PhysicsInvaders.world.getGravity().negate()
 							.mul(i.body.getMass()), i.body.getPosition());
 		}
+
+		/*
+		 * OH GOD WTF IS THIS
+		 */
+		if (health > 0) {
+			Contact c;
+			for (PixelBlock i : ps.listOfPixelBlocks) {
+				if (i.body.getContactList() != null) {
+					c = i.body.getContactList().contact;
+					if (c.isTouching()) {
+						setHealth(getHealth() - 1);
+					}
+				}
+			}
+		}
 	}
 
 	private void fireBullet() {
-		PhysicsInvaders.ctx.setFillStyle("#F0F000");
 		Bullet b = new Bullet((this.pos.x) * PhysicsInvaders.PTM_RATIO
 				+ (this.ps.width / PhysicsInvaders.PTM_RATIO / 2), this.pos.y
 				* PhysicsInvaders.PTM_RATIO - this.ps.height * 2);

@@ -2,6 +2,7 @@ package ie.flax.client;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /*
@@ -27,6 +28,7 @@ public class Hud {
 	}
 
 	public void drawString(String s, int x, int y) {
+		ctx.clearRect(0, 0, Window.getClientWidth(), Window.getClientHeight());
 		ctx.strokeText(s, x, y);
 	}
 }
