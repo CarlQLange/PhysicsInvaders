@@ -17,99 +17,130 @@ import com.google.gwt.user.client.ui.RootPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class PhysicsInvaders implements EntryPoint {
-	public static World world;
-	public static DrawingManager dm;
-	public static final int PTM_RATIO = 30; // 30 pixels to every metre, change
-											// this later on maybe.
-	public static final int PTP_RATIO = 5; // 5 pixels to every "pixel"
-	final float FRAMES_PER_SECOND = 100.0f;
+    public static World world;
+    public static DrawingManager dm;
+    public static final int PTM_RATIO = 30; // 30 pixels to every metre, change
+                                            // this later on maybe.
+    public static final int PTP_RATIO = 5; // 5 pixels to every "pixel"
+    final float FRAMES_PER_SECOND = 100.0f;
 
-	public static ArrayList<IGameObject> listOfObjects = new ArrayList<IGameObject>();
-	public boolean endGame = false;
+    public static ArrayList<IGameObject> listOfObjects = new ArrayList<IGameObject>();
+    public boolean endGame = false;
 
-	@Override
-	public void onModuleLoad() {
+    private TimerCallback cb;
 
-		dm = new DrawingManager(true, Window.getClientWidth() / 4, 0,
-				Window.getClientWidth() / 2, Window.getClientHeight());
+    @Override
+    public void onModuleLoad() {
 
-		RootPanel.get().addDomHandler(new KeyPressHandler() {
-			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				if (event.getCharCode() == 'q') {
-					endGame = !endGame;
-					gameLoop();
-				}
-			}
-		}, KeyPressEvent.getType());
-		initGame();
-		gameLoop();
-	}
+        dm = new DrawingManager(false, true, Window.getClientWidth() / 4, 0,
+                Window.getClientWidth() / 2, Window.getClientHeight());
 
-	private void initGame() {
-		initWorld();
+        RootPanel.get().addDomHandler(new KeyPressHandler() {
+            @Override
+            public void onKeyPress(KeyPressEvent event) {
+                if (event.getCharCode() == 'q') {
+                    endGame = !endGame;
+                    requestAnimationFrame(cb);
+                }
+            }
+        }, KeyPressEvent.getType());
+        initGame();
+        // gameLoop();
 
-		listOfObjects.add(new PlayerShip(300, 650));
-		// listOfObjects.add(new BasicInvader(200, 50, 100, 100));
+        cb = new TimerCallback() {
 
-		setupInvadersDebug();
+            @Override
+            public void fire() {
+                world.step(1.0f / FRAMES_PER_SECOND, 4, 4);
+                if (update()) requestAnimationFrame(cb);
+                dm.draw();
+            }
+        };
+        requestAnimationFrame(cb);
+    }
 
-	}
+    private void initGame() {
+        initWorld();
 
-	private void setupInvadersDebug() {
-		int x = 100;
-		int y = 50;
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 16; j++) {
-				BasicInvader bi = new BasicInvader(x, y);
-				listOfObjects.add(bi);
-				x += 90;
-			}
-			x = 100;
-			y += 170;
-		}
-	}
+        listOfObjects.add(new PlayerShip(300, 650));
+        // listOfObjects.add(new BasicInvader(200, 50, 100, 100));
 
-	private void initWorld() {
-		Vec2 g = new Vec2(0, 10);
-		world = new World(g, true);
-		setupWalls();
-	}
+        setupInvadersDebug();
 
-	private void setupWalls() {
-		// bottom
-		listOfObjects.add(new Wall(0, dm.getCanvasHeight(),
-				dm.getCanvasWidth() * 2, 1, BodyType.STATIC));
-		// left
-		listOfObjects.add(new Wall(0, 0, 1, dm.getCanvasHeight() * 2,
-				BodyType.STATIC));
-		// right
-		listOfObjects.add(new Wall(dm.getCanvasWidth(), 0, 1, dm
-				.getCanvasHeight() * 2, BodyType.STATIC));
-	}
+    }
 
-	private void gameLoop() {
-		Timer timer = new Timer() {
-			// float start;
-			// float elapsedTime = 0;
+    private void setupInvadersDebug() {
+        int x = 100;
+        int y = 50;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 8; j++) {
+                BasicInvader bi = new BasicInvader(x, y);
+                listOfObjects.add(bi);
+                x += 90;
+            }
+            x = 100;
+            y += 170;
+        }
+    }
 
-			@Override
-			public void run() {
-				world.step(1.0f / FRAMES_PER_SECOND, 10, 10);
-				if (update() == false)
-					this.cancel();
-				dm.draw();
-			}
+    private void initWorld() {
+        Vec2 g = new Vec2(0, 10);
+        world = new World(g, true);
+        setupWalls();
+    }
 
+    private void setupWalls() {
+        // bottom
+        listOfObjects.add(new Wall(0, dm.getCanvasHeight(),
+                dm.getCanvasWidth() * 2, 1, BodyType.STATIC));
+        // left
+        listOfObjects.add(new Wall(0, 0, 1, dm.getCanvasHeight() * 2,
+                BodyType.STATIC));
+        // right
+        listOfObjects.add(new Wall(dm.getCanvasWidth(), 0, 1, dm
+                .getCanvasHeight() * 2, BodyType.STATIC));
+    }
+
+    private void gameLoop() {
+        Timer timer = new Timer() {
+            // float start;
+            // float elapsedTime = 0;
+
+            @Override
+            public void run() {
+                world.step(1.0f / FRAMES_PER_SECOND, 10, 10);
+                if (update() == false) this.cancel();
+                dm.draw();
+            }
+
+        };
+        timer.scheduleRepeating(1000 / (int) FRAMES_PER_SECOND);
+    }
+
+    private boolean update() {
+        for (IGameObject i : listOfObjects) {
+            i.update();
+        }
+
+        return !endGame;
+    }
+
+    /*
+     * This code snippet taken from the ForPlay source, under Apache.
+     */
+    private native void requestAnimationFrame(TimerCallback callback) /*-{
+		var fn = function() {
+			callback.@ie.flax.client.TimerCallback::fire()();
 		};
-		timer.scheduleRepeating(1000 / (int) FRAMES_PER_SECOND);
-	}
-
-	private boolean update() {
-		for (IGameObject i : listOfObjects) {
-			i.update();
+		if ($wnd.requestAnimationFrame) {
+			$wnd.requestAnimationFrame(fn);
+		} else if ($wnd.mozRequestAnimationFrame) {
+			$wnd.mozRequestAnimationFrame(fn);
+		} else if ($wnd.webkitRequestAnimationFrame) {
+			$wnd.webkitRequestAnimationFrame(fn);
+		} else {
+			// 20ms => 50fps
+			$wnd.setTimeout(fn, 20);
 		}
-
-		return !endGame;
-	}
+    }-*/;
 }

@@ -1,5 +1,5 @@
 function physicsinvaders(){
-  var $intern_0 = '', $intern_35 = '" for "gwt:onLoadErrorFn"', $intern_33 = '" for "gwt:onPropertyErrorFn"', $intern_21 = '"><\/script>', $intern_10 = '#', $intern_61 = '.cache.html', $intern_12 = '/', $intern_54 = '33C0999755A47DCBF9A71BE243458BB7', $intern_55 = '403BF00288E2A8710EE54193902E0FD2', $intern_56 = '45B9AF5A805E7B3DC4AB249F8F6DC6CA', $intern_60 = ':', $intern_27 = '::', $intern_63 = '<script defer="defer">physicsinvaders.onInjectionDone(\'physicsinvaders\')<\/script>', $intern_20 = '<script id="', $intern_30 = '=', $intern_11 = '?', $intern_32 = 'Bad handler "', $intern_57 = 'CA63318D5C87FC7181877DFEA466DD21', $intern_62 = 'DOMContentLoaded', $intern_58 = 'E04898CA202D905389149FC66804861B', $intern_59 = 'E71A0C97AC2C2B365C75151C31C508E9', $intern_22 = 'SCRIPT', $intern_19 = '__gwt_marker_physicsinvaders', $intern_23 = 'base', $intern_15 = 'baseUrl', $intern_4 = 'begin', $intern_3 = 'bootstrap', $intern_14 = 'clear.cache.gif', $intern_29 = 'content', $intern_9 = 'end', $intern_48 = 'gecko', $intern_49 = 'gecko1_8', $intern_5 = 'gwt.codesvr=', $intern_6 = 'gwt.hosted=', $intern_7 = 'gwt.hybrid', $intern_34 = 'gwt:onLoadErrorFn', $intern_31 = 'gwt:onPropertyErrorFn', $intern_28 = 'gwt:property', $intern_52 = 'hosted.html?physicsinvaders', $intern_47 = 'ie6', $intern_46 = 'ie8', $intern_45 = 'ie9', $intern_36 = 'iframe', $intern_13 = 'img', $intern_37 = "javascript:''", $intern_51 = 'loadExternalRefs', $intern_24 = 'meta', $intern_39 = 'moduleRequested', $intern_8 = 'moduleStartup', $intern_44 = 'msie', $intern_25 = 'name', $intern_41 = 'opera', $intern_1 = 'physicsinvaders', $intern_17 = 'physicsinvaders.nocache.js', $intern_26 = 'physicsinvaders::', $intern_38 = 'position:absolute;width:0;height:0;border:none', $intern_43 = 'safari', $intern_16 = 'script', $intern_53 = 'selectingPermutation', $intern_2 = 'startup', $intern_18 = 'undefined', $intern_50 = 'unknown', $intern_40 = 'user.agent', $intern_42 = 'webkit';
+  var $intern_0 = '', $intern_35 = '" for "gwt:onLoadErrorFn"', $intern_33 = '" for "gwt:onPropertyErrorFn"', $intern_21 = '"><\/script>', $intern_10 = '#', $intern_45 = '.cache.html', $intern_12 = '/', $intern_44 = ':', $intern_27 = '::', $intern_47 = '<script defer="defer">physicsinvaders.onInjectionDone(\'physicsinvaders\')<\/script>', $intern_20 = '<script id="', $intern_30 = '=', $intern_11 = '?', $intern_43 = 'ADCC60E4DFA7C24E9E79F3D5B248E264', $intern_32 = 'Bad handler "', $intern_46 = 'DOMContentLoaded', $intern_22 = 'SCRIPT', $intern_19 = '__gwt_marker_physicsinvaders', $intern_23 = 'base', $intern_15 = 'baseUrl', $intern_4 = 'begin', $intern_3 = 'bootstrap', $intern_14 = 'clear.cache.gif', $intern_29 = 'content', $intern_9 = 'end', $intern_5 = 'gwt.codesvr=', $intern_6 = 'gwt.hosted=', $intern_7 = 'gwt.hybrid', $intern_34 = 'gwt:onLoadErrorFn', $intern_31 = 'gwt:onPropertyErrorFn', $intern_28 = 'gwt:property', $intern_41 = 'hosted.html?physicsinvaders', $intern_36 = 'iframe', $intern_13 = 'img', $intern_37 = "javascript:''", $intern_40 = 'loadExternalRefs', $intern_24 = 'meta', $intern_39 = 'moduleRequested', $intern_8 = 'moduleStartup', $intern_25 = 'name', $intern_1 = 'physicsinvaders', $intern_17 = 'physicsinvaders.nocache.js', $intern_26 = 'physicsinvaders::', $intern_38 = 'position:absolute;width:0;height:0;border:none', $intern_16 = 'script', $intern_42 = 'selectingPermutation', $intern_2 = 'startup', $intern_18 = 'undefined';
   var $wnd = window, $doc = document, $stats = $wnd.__gwtStatsEvent?function(a){
     return $wnd.__gwtStatsEvent(a);
   }
@@ -187,14 +187,6 @@ function physicsinvaders(){
     return value == null?null:value;
   }
 
-  function unflattenKeylistIntoAnswers(propValArray, value){
-    var answer = answers;
-    for (var i = 0, n = propValArray.length - 1; i < n; ++i) {
-      answer = answer[propValArray[i]] || (answer[propValArray[i]] = []);
-    }
-    answer[propValArray[n]] = value;
-  }
-
   function computePropValue(propName){
     var value = providers[propName](), allowedValuesMap = values[propName];
     if (value in allowedValuesMap) {
@@ -225,48 +217,6 @@ function physicsinvaders(){
     }
   }
 
-  providers[$intern_40] = function(){
-    var ua = navigator.userAgent.toLowerCase();
-    var makeVersion = function(result){
-      return parseInt(result[1]) * 1000 + parseInt(result[2]);
-    }
-    ;
-    if (function(){
-      return ua.indexOf($intern_41) != -1;
-    }
-    ())
-      return $intern_41;
-    if (function(){
-      return ua.indexOf($intern_42) != -1;
-    }
-    ())
-      return $intern_43;
-    if (function(){
-      return ua.indexOf($intern_44) != -1 && $doc.documentMode >= 9;
-    }
-    ())
-      return $intern_45;
-    if (function(){
-      return ua.indexOf($intern_44) != -1 && $doc.documentMode >= 8;
-    }
-    ())
-      return $intern_46;
-    if (function(){
-      var result = /msie ([0-9]+)\.([0-9]+)/.exec(ua);
-      if (result && result.length == 3)
-        return makeVersion(result) >= 6000;
-    }
-    ())
-      return $intern_47;
-    if (function(){
-      return ua.indexOf($intern_48) != -1;
-    }
-    ())
-      return $intern_49;
-    return $intern_50;
-  }
-  ;
-  values[$intern_40] = {gecko1_8:0, ie6:1, ie8:2, ie9:3, opera:4, safari:5};
   physicsinvaders.onScriptLoad = function(){
     if (frameInjected) {
       loadDone = true;
@@ -276,7 +226,7 @@ function physicsinvaders(){
   ;
   physicsinvaders.onInjectionDone = function(){
     scriptsDone = true;
-    $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_51, millis:(new Date).getTime(), type:$intern_9});
+    $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_40, millis:(new Date).getTime(), type:$intern_9});
     maybeStartModule();
   }
   ;
@@ -289,25 +239,19 @@ function physicsinvaders(){
       $wnd.location.reload();
       return;
     }
-    initialHtml = $intern_52;
+    initialHtml = $intern_41;
     strongName = $intern_0;
   }
-  $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_3, millis:(new Date).getTime(), type:$intern_53});
+  $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_3, millis:(new Date).getTime(), type:$intern_42});
   if (!isHostedMode()) {
     try {
-      unflattenKeylistIntoAnswers([$intern_41], $intern_54);
-      unflattenKeylistIntoAnswers([$intern_45], $intern_55);
-      unflattenKeylistIntoAnswers([$intern_46], $intern_56);
-      unflattenKeylistIntoAnswers([$intern_49], $intern_57);
-      unflattenKeylistIntoAnswers([$intern_43], $intern_58);
-      unflattenKeylistIntoAnswers([$intern_47], $intern_59);
-      strongName = answers[computePropValue($intern_40)];
-      var idx = strongName.indexOf($intern_60);
+      strongName = $intern_43;
+      var idx = strongName.indexOf($intern_44);
       if (idx != -1) {
         softPermutationId = Number(strongName.substring(idx + 1));
         strongName = strongName.substring(0, idx);
       }
-      initialHtml = strongName + $intern_61;
+      initialHtml = strongName + $intern_45;
     }
      catch (e) {
       return;
@@ -319,7 +263,7 @@ function physicsinvaders(){
       bodyDone = true;
       maybeStartModule();
       if ($doc.removeEventListener) {
-        $doc.removeEventListener($intern_62, onBodyDone, false);
+        $doc.removeEventListener($intern_46, onBodyDone, false);
       }
       if (onBodyDoneTimerId) {
         clearInterval(onBodyDoneTimerId);
@@ -328,7 +272,7 @@ function physicsinvaders(){
   }
 
   if ($doc.addEventListener) {
-    $doc.addEventListener($intern_62, function(){
+    $doc.addEventListener($intern_46, function(){
       maybeInjectFrame();
       onBodyDone();
     }
@@ -342,8 +286,8 @@ function physicsinvaders(){
   }
   , 50);
   $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_3, millis:(new Date).getTime(), type:$intern_9});
-  $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_51, millis:(new Date).getTime(), type:$intern_4});
-  $doc.write($intern_63);
+  $stats && $stats({moduleName:$intern_1, sessionId:$sessionId, subSystem:$intern_2, evtGroup:$intern_40, millis:(new Date).getTime(), type:$intern_4});
+  $doc.write($intern_47);
 }
 
 physicsinvaders();
