@@ -14,6 +14,7 @@ public class Bullet implements IGameObject {
 			i.body.m_mass = 50.0f;
 			i.body.setLinearVelocity(new Vec2(0, -20));
 			i.aggressiveSleep = false;
+			i.body.setBullet(false); // probably should use this but performance
 		}
 	}
 

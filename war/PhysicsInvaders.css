@@ -1,4 +1,8 @@
 html {
+	perspective: 1500px;
+	perspective-origin: 50% 0%;
+	-moz-perspective: 1500px;
+	-moz-perspective-origin: 50% 0%;
 	-webkit-perspective: 1500px;
 	-webkit-perspective-origin-x: 50%;
 	-webkit-perspective-origin-y: 0%;
@@ -6,10 +10,14 @@ html {
 }
 .game {
 	z-index:1 !important;
+	transform:rotateX(45deg);
+	-moz-transform:rotateX(45deg);
 	-webkit-transform:rotateX(45deg);
 }
 
 .hud {
 	z-index: 2 !important;	
+	transform:rotateX(45deg);
+	-moz-transform:rotateX(45deg);
 	-webkit-transform:rotateX(45deg);
 }

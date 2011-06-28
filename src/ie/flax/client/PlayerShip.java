@@ -29,7 +29,6 @@ public class PlayerShip implements IGameObject {
 
 	public void setHealth(int health) {
 		this.health = health;
-		// remove this line when merging
 		PhysicsInvaders.dm.getHud().drawString(health + "", 50, 500);
 	}
 
