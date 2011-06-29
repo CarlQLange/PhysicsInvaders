@@ -12,7 +12,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-  
+  <inherits name='com.google.gwt.logging.Logging'/>
   <inherits name='org.jbox2d.GwtBox2D'/>
   <!-- Specify the app entry point class.                         -->
   <entry-point class='ie.flax.client.PhysicsInvaders'/>
@@ -21,6 +21,6 @@
   <source path='client'/>
   <source path='shared'/>
 
-	 <set-property name="user.agent" value="safari"/>
+  <set-property name="user.agent" value="safari"/>
 
 </module>

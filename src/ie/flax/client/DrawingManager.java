@@ -18,148 +18,152 @@ import com.google.gwt.user.client.ui.RootPanel;
  * order the things to be drawn by colour, optimising the hell out of it.
  */
 public class DrawingManager {
-	private boolean doubleBuffer;
-	private boolean colourManage;
-	private String currentColour;
-	private static Hud hud;
-	private static Canvas drawCanvas;
-	private static Canvas showCanvas;
-	/*
-	 * To be honest this shouldn't be of pixelblocks, change if moving
-	 */
-	private static ArrayList<PixelBlock> drawList = new ArrayList<PixelBlock>();
+    private final boolean doubleBuffer;
+    private final boolean colourManage;
+    private String currentColour;
+    private static Hud hud;
+    private static Canvas drawCanvas;
+    private static Canvas showCanvas;
+    /*
+     * To be honest this shouldn't be of pixelblocks, change if moving
+     */
+    private static ArrayList<PixelBlock> drawList = new ArrayList<PixelBlock>();
 
-	/*
-	 * This constructor sets up the canvases (hud, and the two canvases for
-	 * buffering).
-	 */
-	public DrawingManager(boolean doubleBuffer, boolean colourManage, int x,
-			int y, int w, int h) {
-		this.doubleBuffer = doubleBuffer;
-		this.colourManage = colourManage;
-		hud = new Hud(x, y, w, h);
+    /*
+     * This constructor sets up the canvases (hud, and the two canvases for
+     * buffering).
+     */
+    public DrawingManager(boolean doubleBuffer, boolean colourManage, int x,
+            int y, int w, int h) {
+        this.doubleBuffer = doubleBuffer;
+        this.colourManage = colourManage;
+        hud = new Hud(x, y, w, h);
 
-		setupCanvas(w, h);
-		showCanvas.setStyleName("game");
-		RootPanel.get().add(showCanvas, x, y);
+        setupCanvas(w, h);
+        showCanvas.setStyleName("game");
+        RootPanel.get().add(showCanvas, x, y);
 
-		if (!doubleBuffer)
-			drawCanvas = showCanvas;
-	}
+        if (!doubleBuffer) {
+            drawCanvas = showCanvas;
+        }
+    }
 
-	private void setupCanvas(int w, int h) {
-		drawCanvas = Canvas.createIfSupported();
-		drawCanvas.setPixelSize(w, h);
-		drawCanvas.setCoordinateSpaceWidth(w);
-		drawCanvas.setCoordinateSpaceHeight(h);
-		drawCanvas.addDomHandler(new ClickHandler() {
+    public void addToDrawList(PixelBlock objToAdd) {
+        if (objToAdd != null) {
+            drawList.add(objToAdd);
+        }
+        if (colourManage) {
+            sortDisplayList();
+        }
+    }
 
-			@Override
-			public void onClick(ClickEvent event) {
-				event.preventDefault();
-			}
-		}, ClickEvent.getType());
+    /*
+     * Called in the game's main loop AND NOWHERE ELSE, YA HEAR
+     */
+    public void draw() {
+        // clear all
+        getContext().clearRect(0, 0, getCanvasWidth(), getCanvasHeight());
+        // go through the display list and draw them to the drawCanvas
+        for (PixelBlock i : drawList) {
+            if ((i.colour != currentColour) && (colourManage)) {
+                currentColour = i.colour;
+                drawCanvas.getContext2d().setFillStyle(currentColour);
+            }
+            drawBlock(drawCanvas, i);
+        }
 
-		showCanvas = Canvas.createIfSupported();
-		showCanvas.setPixelSize(w, h);
-		showCanvas.setCoordinateSpaceWidth(w);
-		showCanvas.setCoordinateSpaceHeight(h);
-		showCanvas.addDomHandler(new ClickHandler() {
+        // swap buffers
+        if (doubleBuffer) {
+            swapBuffers();
+        }
+    }
 
-			@Override
-			public void onClick(ClickEvent event) {
-				event.preventDefault();
-			}
-		}, ClickEvent.getType());
-	}
+    public int getCanvasHeight() {
+        return showCanvas.getCoordinateSpaceHeight();
+    }
 
-	private Context2d getContext() {
-		return drawCanvas.getContext2d();
-	}
+    public int getCanvasWidth() {
+        return showCanvas.getCoordinateSpaceWidth();
+    }
 
-	public Hud getHud() {
-		return hud;
-	}
+    public Hud getHud() {
+        return hud;
+    }
 
-	/*
-	 * Called in the game's main loop AND NOWHERE ELSE, YA HEAR
-	 */
-	public void draw() {
-		// clear all
-		getContext().clearRect(0, 0, getCanvasWidth(), getCanvasHeight());
-		// go through the display list and draw them to the drawCanvas
-		for (PixelBlock i : drawList) {
-			if ((i.colour != currentColour) && (colourManage)) {
-				currentColour = i.colour;
-				drawCanvas.getContext2d().setFillStyle(currentColour);
-			}
-			drawBlock(drawCanvas, i);
-		}
+    private void drawBlock(Canvas cnv, PixelBlock i) {
+        boolean procedural = true;
+        if (procedural) {
+            Context2d $ = cnv.getContext2d();
+            $.save();
+            $.translate(i.pos.x * PhysicsInvaders.PTM_RATIO, i.pos.y
+                    * PhysicsInvaders.PTM_RATIO);
+            $.rotate(i.body.getAngle());
+            $.scale(PhysicsInvaders.PTM_RATIO, PhysicsInvaders.PTM_RATIO);
 
-		// swap buffers
-		if (doubleBuffer)
-			swapBuffers();
-	}
+            $.beginPath();
+            $.moveTo(0, 0);
+            Vec2[] vec2 = i.shape.getVertices();
+            for (int q = 0; q < i.shape.getVertexCount(); q++) {
+                $.lineTo(vec2[q].x, vec2[q].y);
+            }
+            $.lineTo(vec2[0].x, vec2[0].y);
+            $.closePath();
+            $.fill();
+            $.restore();
+        } else {
+            // imagedata
+            ImageData id = getContext().createImageData(getCanvasWidth(),
+                    getCanvasHeight());
+            for (int j = 0; j < getCanvasWidth(); j++) {
+                for (int k = 0; k < getCanvasHeight(); k++) {
+                    id.setRedAt(255, j, k);
+                    id.setGreenAt(157, j, k);
+                    id.setBlueAt(50, j, k);
+                }
+            }
+            getContext().putImageData(id, 0, 0);
+        }
+    }
 
-	private void drawBlock(Canvas cnv, PixelBlock i) {
-		boolean procedural = false;
-		if (procedural) {
-			Context2d $ = cnv.getContext2d();
-			$.save();
-			$.translate(i.pos.x * PhysicsInvaders.PTM_RATIO, i.pos.y
-					* PhysicsInvaders.PTM_RATIO);
-			$.rotate(i.body.getAngle());
-			$.scale(PhysicsInvaders.PTM_RATIO, PhysicsInvaders.PTM_RATIO);
+    private Context2d getContext() {
+        return drawCanvas.getContext2d();
+    }
 
-			$.beginPath();
-			$.moveTo(0, 0);
-			Vec2[] vec2 = i.shape.getVertices();
-			for (int q = 0; q < i.shape.getVertexCount(); q++) {
-				$.lineTo(vec2[q].x, vec2[q].y);
-			}
-			$.lineTo(vec2[0].x, vec2[0].y);
-			$.closePath();
-			$.fill();
-			$.restore();
-		} else {
-			// imagedata
-			ImageData id = getContext().createImageData(getCanvasWidth(),
-					getCanvasHeight());
-			for (int j = 0; j < getCanvasWidth(); j++) {
-				for (int k = 0; k < getCanvasHeight(); k++) {
-					id.setRedAt(255, j, k);
-					id.setGreenAt(157, j, k);
-					id.setBlueAt(50, j, k);
-				}
-			}
-			getContext().putImageData(id, 0, 0);
-		}
-	}
+    private void setupCanvas(int w, int h) {
+        drawCanvas = Canvas.createIfSupported();
+        drawCanvas.setPixelSize(w, h);
+        drawCanvas.setCoordinateSpaceWidth(w);
+        drawCanvas.setCoordinateSpaceHeight(h);
+        drawCanvas.addDomHandler(new ClickHandler() {
 
-	private void swapBuffers() {
-		showCanvas.getContext2d().clearRect(0, 0, getCanvasWidth(),
-				getCanvasHeight());
-		showCanvas.getContext2d()
-				.drawImage(drawCanvas.getCanvasElement(), 0, 0);
-	}
+            @Override
+            public void onClick(ClickEvent event) {
+                event.preventDefault();
+            }
+        }, ClickEvent.getType());
 
-	public void addToDrawList(PixelBlock objToAdd) {
-		if (objToAdd != null)
-			drawList.add(objToAdd);
-		if (colourManage)
-			sortDisplayList();
-	}
+        showCanvas = Canvas.createIfSupported();
+        showCanvas.setPixelSize(w, h);
+        showCanvas.setCoordinateSpaceWidth(w);
+        showCanvas.setCoordinateSpaceHeight(h);
+        showCanvas.addDomHandler(new ClickHandler() {
 
-	private void sortDisplayList() {
-		// sorts the display list by colour
-		Collections.sort(drawList);
-	}
+            @Override
+            public void onClick(ClickEvent event) {
+                event.preventDefault();
+            }
+        }, ClickEvent.getType());
+    }
 
-	public int getCanvasHeight() {
-		return showCanvas.getCoordinateSpaceHeight();
-	}
+    private void sortDisplayList() {
+        // sorts the display list by colour
+        Collections.sort(drawList);
+    }
 
-	public int getCanvasWidth() {
-		return showCanvas.getCoordinateSpaceWidth();
-	}
+    private void swapBuffers() {
+        showCanvas.getContext2d().clearRect(0, 0, getCanvasWidth(),
+                getCanvasHeight());
+        showCanvas.getContext2d()
+                .drawImage(drawCanvas.getCanvasElement(), 0, 0);
+    }
 }
