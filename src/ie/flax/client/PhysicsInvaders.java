@@ -36,7 +36,7 @@ public class PhysicsInvaders implements EntryPoint {
     @Override
     public void onModuleLoad() {
 
-        dm = new DrawingManager(false, true, Window.getClientWidth() / 4, 0,
+        dm = new DrawingManager(true, true, Window.getClientWidth() / 4, 0,
                 Window.getClientWidth() / 2, Window.getClientHeight());
 
         RootPanel.get().addDomHandler(new KeyPressHandler() {

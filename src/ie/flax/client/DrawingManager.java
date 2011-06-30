@@ -7,7 +7,6 @@ import org.jbox2d.common.Vec2;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -21,9 +20,10 @@ public class DrawingManager {
     private final boolean doubleBuffer;
     private final boolean colourManage;
     private String currentColour;
-    private static Hud hud;
-    private static Canvas drawCanvas;
-    private static Canvas showCanvas;
+    private final Hud hud;
+    private Canvas drawCanvas;
+    private Canvas showCanvas;
+
     /*
      * To be honest this shouldn't be of pixelblocks, change if moving
      */
@@ -91,38 +91,28 @@ public class DrawingManager {
     }
 
     private void drawBlock(Canvas cnv, PixelBlock i) {
-        boolean procedural = true;
-        if (procedural) {
-            Context2d $ = cnv.getContext2d();
-            $.save();
-            $.translate(i.pos.x * PhysicsInvaders.PTM_RATIO, i.pos.y
-                    * PhysicsInvaders.PTM_RATIO);
-            $.rotate(i.body.getAngle());
-            $.scale(PhysicsInvaders.PTM_RATIO, PhysicsInvaders.PTM_RATIO);
 
-            $.beginPath();
-            $.moveTo(0, 0);
-            Vec2[] vec2 = i.shape.getVertices();
-            for (int q = 0; q < i.shape.getVertexCount(); q++) {
-                $.lineTo(vec2[q].x, vec2[q].y);
-            }
-            $.lineTo(vec2[0].x, vec2[0].y);
-            $.closePath();
-            $.fill();
-            $.restore();
-        } else {
-            // imagedata
-            ImageData id = getContext().createImageData(getCanvasWidth(),
-                    getCanvasHeight());
-            for (int j = 0; j < getCanvasWidth(); j++) {
-                for (int k = 0; k < getCanvasHeight(); k++) {
-                    id.setRedAt(255, j, k);
-                    id.setGreenAt(157, j, k);
-                    id.setBlueAt(50, j, k);
-                }
-            }
-            getContext().putImageData(id, 0, 0);
-        }
+        Context2d $ = cnv.getContext2d();
+        $.save();
+        $.translate(i.pos.x * PhysicsInvaders.PTM_RATIO, i.pos.y
+                * PhysicsInvaders.PTM_RATIO);
+        $.rotate(i.body.getAngle());
+        $.scale(PhysicsInvaders.PTM_RATIO, PhysicsInvaders.PTM_RATIO);
+
+        // $.beginPath();
+        // $.moveTo(0, 0);
+        Vec2[] vec2 = i.shape.getVertices();
+        // for (int q = 0; q < i.shape.getVertexCount(); q++) {
+        // $.lineTo(vec2[q].x, vec2[q].y);
+        // }
+        $.fillRect(vec2[0].x - (1.0 / PhysicsInvaders.PTM_RATIO), vec2[0].y
+                - (1.0 / PhysicsInvaders.PTM_RATIO), vec2[2].x
+                + (2.0 / PhysicsInvaders.PTM_RATIO), vec2[2].y
+                + (2.0 / PhysicsInvaders.PTM_RATIO));
+        // $.lineTo(vec2[0].x, vec2[0].y);
+        // $.closePath();
+        // $.fill();
+        $.restore();
     }
 
     private Context2d getContext() {
