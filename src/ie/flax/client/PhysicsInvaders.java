@@ -2,8 +2,6 @@ package ie.flax.client;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
@@ -12,8 +10,6 @@ import org.jbox2d.dynamics.World;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.logging.client.ConsoleLogHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -35,7 +31,7 @@ public class PhysicsInvaders implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-
+        FLog.init();
         dm = new DrawingManager(true, true, Window.getClientWidth() / 4, 0,
                 Window.getClientWidth() / 2, Window.getClientHeight());
 
@@ -55,24 +51,6 @@ public class PhysicsInvaders implements EntryPoint {
         gameLoopReqAnim();
     }
 
-    private void gameLoop() {
-        Timer timer = new Timer() {
-            // float start;
-            // float elapsedTime = 0;
-
-            @Override
-            public void run() {
-                world.step(1.0f / FRAMES_PER_SECOND, 10, 10);
-                if (update() == false) {
-                    cancel();
-                }
-                dm.draw();
-            }
-
-        };
-        timer.scheduleRepeating(1000 / (int) FRAMES_PER_SECOND);
-    }
-
     private void gameLoopReqAnim() {
         cb = new TimerCallback() {
 
@@ -87,8 +65,7 @@ public class PhysicsInvaders implements EntryPoint {
                 dm.draw();
 
                 long newTime = new Date().getTime();
-                ConsoleLogHandler f = new ConsoleLogHandler();
-                f.publish(new LogRecord(Level.INFO, (newTime - oldTime) + ""));
+                FLog.info(newTime - oldTime + "");
             }
         };
         requestAnimationFrame(cb);
@@ -125,8 +102,8 @@ public class PhysicsInvaders implements EntryPoint {
 		} else if ($wnd.webkitRequestAnimationFrame) {
 			$wnd.webkitRequestAnimationFrame(fn);
 		} else {
-			// 20ms => 50fps
-			$wnd.setTimeout(fn, 20);
+			// 16ms => 60fps
+			$wnd.setTimeout(fn, 16);
 		}
     }-*/;
 
