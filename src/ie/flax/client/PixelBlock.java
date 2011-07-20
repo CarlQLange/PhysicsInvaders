@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Window;
 public class PixelBlock extends PhysicsObject implements Comparable<PixelBlock> {
 
 	boolean aggressiveSleep = true;
+	boolean shouldDestroy = false;
 	public String colour = "#000000";
 
 	public PixelBlock(float x, float y, int w, int h, String colour, BodyType t) {
@@ -43,27 +44,31 @@ public class PixelBlock extends PhysicsObject implements Comparable<PixelBlock> 
 		/*
 		 * This is not reusable code. TODO make better.
 		 */
-		if (aggressiveSleep == true) {
 			if (this.body.getPosition().y * PhysicsInvaders.PTM_RATIO >= Window
 					.getClientHeight() / 3 * 2) { // is pixelblock in bottom
 													// third of canvas
-				if ((this.body.getLinearVelocity().x <= 0.05)
-						&& (this.body.getLinearVelocity().x >= -0.05)) {
-					if ((this.body.getLinearVelocity().y <= 0.05)
+				if ((this.body.getLinearVelocity().x <= 0.5)
+						&& (this.body.getLinearVelocity().x >= -0.5)) {
+					if ((this.body.getLinearVelocity().y <= 0.5)
 							&& (this.body.getLinearVelocity().y >= -0.5)) {
-						this.body.setAwake(false);
-						if ((this.body.getLinearVelocity().x == 0)
-								&& (this.body.getLinearVelocity().y == 0))
-							this.body.setType(BodyType.STATIC);
+						
+							if(shouldDestroy) {
+								PhysicsInvaders.world.destroyBody(this.body);
+								PhysicsInvaders.dm.removeFromDrawList(this);
+							}
 					}
 				}
 			}
-		}
+		
 		super.update();
 	}
 
 	@Override
 	public int compareTo(PixelBlock o) {
 		return this.colour.compareTo(o.colour);
+	}
+
+	public void setToDestroy() {
+		shouldDestroy = true;
 	}
 }

@@ -19,10 +19,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class PhysicsInvaders implements EntryPoint {
     public static World world;
     public static DrawingManager dm;
+    public static InvaderManager im;
+    
     public static final int PTM_RATIO = 30; // 30 pixels to every metre, change
                                             // this later on maybe.
     public static final int PTP_RATIO = 5; // 5 pixels to every "pixel"
-    final float FRAMES_PER_SECOND = 100.0f;
+    public static final float FRAMES_PER_SECOND = 60.0f;
 
     public static ArrayList<IGameObject> listOfObjects = new ArrayList<IGameObject>();
     public boolean endGame = false;
@@ -40,25 +42,54 @@ public class PhysicsInvaders implements EntryPoint {
             public void onKeyPress(KeyPressEvent event) {
                 if (event.getCharCode() == 'q') {
                     endGame = !endGame;
-                    // gameLoop();
-                    gameLoopReqAnim();
+                    gameLoop();
                 }
             }
         }, KeyPressEvent.getType());
         initGame();
-        // gameLoop();
 
-        gameLoopReqAnim();
+        gameLoop();
     }
 
-    private void gameLoopReqAnim() {
+    
+    private void gameLoop() {
+    	cb = new TimerCallback() {
+			double t = 0.0;
+			float dt = 0.01f;
+			
+			double currentTime = new Date().getTime();; //lowres
+			double accumulator = dt;
+			
+			@Override
+			public void fire() {
+				double newTime = new Date().getTime();
+				double frameTime = newTime - currentTime;
+				if (frameTime > 1.0/FRAMES_PER_SECOND) frameTime = 1.0/FRAMES_PER_SECOND;
+				currentTime = newTime;
+				
+				accumulator+=frameTime;
+				
+				while (accumulator>= dt){
+					world.step(dt, 8, 8);
+					t+=dt;
+					accumulator-=dt;
+				}
+				
+				if (update()) requestAnimationFrame(this);
+				dm.draw();
+				
+				
+			}
+		};
+    	/*
         cb = new TimerCallback() {
 
             @Override
             public void fire() {
                 long oldTime = new Date().getTime();
-
-                world.step(1.0f / FRAMES_PER_SECOND, 1, 1);
+            	
+                world.step(1.0f / FRAMES_PER_SECOND, 2, 2);
+                
                 if (update()) {
                     requestAnimationFrame(cb);
                 }
@@ -68,16 +99,19 @@ public class PhysicsInvaders implements EntryPoint {
                 FLog.info(newTime - oldTime + "");
             }
         };
+        */
         requestAnimationFrame(cb);
     }
 
     private void initGame() {
         initWorld();
-
+        PhysicsInvaders.world.drawDebugData();
         listOfObjects.add(new PlayerShip(300, 650));
         // listOfObjects.add(new BasicInvader(200, 50, 100, 100));
 
-        setupInvadersDebug();
+        im = new InvaderManager();
+        
+        im.update();
 
     }
 
@@ -102,24 +136,10 @@ public class PhysicsInvaders implements EntryPoint {
 		} else if ($wnd.webkitRequestAnimationFrame) {
 			$wnd.webkitRequestAnimationFrame(fn);
 		} else {
-			// 16ms => 60fps
-			$wnd.setTimeout(fn, 16);
+			$wnd.setTimeout(fn, 1000/@ie.flax.client.PhysicsInvaders::FRAMES_PER_SECOND);
 		}
     }-*/;
 
-    private void setupInvadersDebug() {
-        int x = 100;
-        int y = 50;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 6; j++) {
-                BasicInvader bi = new BasicInvader(x, y);
-                listOfObjects.add(bi);
-                x += 90;
-            }
-            x = 100;
-            y += 170;
-        }
-    }
 
     private void setupWalls() {
         // bottom
@@ -134,6 +154,8 @@ public class PhysicsInvaders implements EntryPoint {
     }
 
     private boolean update() {
+    	im.update();
+    	
         for (IGameObject i : listOfObjects) {
             i.update();
         }

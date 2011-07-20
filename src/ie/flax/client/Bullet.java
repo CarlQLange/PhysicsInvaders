@@ -13,7 +13,7 @@ public class Bullet implements IGameObject {
 		for (PixelBlock i : ps.listOfPixelBlocks) {
 			i.body.m_mass = 50.0f;
 			i.body.setLinearVelocity(new Vec2(0, -20));
-			i.aggressiveSleep = false;
+			i.aggressiveSleep = true;
 			i.body.setBullet(false); // probably should use this but performance
 		}
 	}

@@ -1,5 +1,6 @@
 package ie.flax.client;
 
+
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.contacts.Contact;
@@ -8,6 +9,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /*
@@ -22,6 +24,7 @@ public class PlayerShip implements IGameObject {
     Vec2 pos;
     PixelSprite ps;
     boolean together = true;
+	private int numberOfBullets = 0;
 
     public PlayerShip(float x, float y) {
         // super(x, y, w, h, BodyType.KINEMATIC);
@@ -46,9 +49,9 @@ public class PlayerShip implements IGameObject {
         for (PixelBlock i : ps.listOfPixelBlocks) {
             i.body.setType(BodyType.DYNAMIC);
             i.aggressiveSleep = false;
-            for (PixelBlock j : ps.listOfPixelBlocks) {
-
-            }
+            //for (PixelBlock j : ps.listOfPixelBlocks) {
+//
+  //          }
         }
 
         pos = new Vec2(x, y);
@@ -94,6 +97,15 @@ public class PlayerShip implements IGameObject {
                 }
             }
         }, KeyUpEvent.getType());
+        
+        Timer t = new Timer() {
+			
+			@Override
+			public void run() {
+				numberOfBullets--;
+			}
+		};
+		t.scheduleRepeating(500);
     }
 
     @Override
@@ -146,10 +158,13 @@ public class PlayerShip implements IGameObject {
     }
 
     private void fireBullet() {
+    	if (numberOfBullets  < 50){
         Bullet b = new Bullet(((pos.x) * PhysicsInvaders.PTM_RATIO)
                 + (ps.width / PhysicsInvaders.PTM_RATIO / 2),
                 (pos.y * PhysicsInvaders.PTM_RATIO) - (ps.height * 2));
         PhysicsInvaders.listOfObjects.add(b);
+        numberOfBullets+=3;
+    	}
     }
 
     /*

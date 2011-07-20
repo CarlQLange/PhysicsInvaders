@@ -7,8 +7,10 @@ import org.jbox2d.common.Vec2;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /*
@@ -24,6 +26,9 @@ public class DrawingManager {
     private Canvas drawCanvas;
     private Canvas showCanvas;
 
+
+    private Image img = new Image("http://flax.ie/images/flaxLogo.png");
+    
     /*
      * To be honest this shouldn't be of pixelblocks, change if moving
      */
@@ -91,28 +96,35 @@ public class DrawingManager {
     }
 
     private void drawBlock(Canvas cnv, PixelBlock i) {
-
+    	
         Context2d $ = cnv.getContext2d();
         $.save();
         $.translate(i.pos.x * PhysicsInvaders.PTM_RATIO, i.pos.y
-                * PhysicsInvaders.PTM_RATIO);
+               * PhysicsInvaders.PTM_RATIO);
         $.rotate(i.body.getAngle());
         $.scale(PhysicsInvaders.PTM_RATIO, PhysicsInvaders.PTM_RATIO);
 
+        
         // $.beginPath();
         // $.moveTo(0, 0);
         Vec2[] vec2 = i.shape.getVertices();
         // for (int q = 0; q < i.shape.getVertexCount(); q++) {
         // $.lineTo(vec2[q].x, vec2[q].y);
         // }
-        $.fillRect(vec2[0].x - (1.0 / PhysicsInvaders.PTM_RATIO), vec2[0].y
-                - (1.0 / PhysicsInvaders.PTM_RATIO), vec2[2].x
-                + (2.0 / PhysicsInvaders.PTM_RATIO), vec2[2].y
-                + (2.0 / PhysicsInvaders.PTM_RATIO));
+        $.fillRect(vec2[0].x, vec2[0].y, vec2[2].x - vec2[0].x, vec2[2].y - vec2[0].y);
         // $.lineTo(vec2[0].x, vec2[0].y);
         // $.closePath();
         // $.fill();
+         /*
+        $.drawImage(ImageElement.as(img.getElement()), 
+        		(double)i.shape.getVertices()[0].x, 
+        		(double)i.shape.getVertices()[0].y, 
+        		(double)i.shape.getVertices()[2].x - (double)i.shape.getVertices()[0].x, 
+        		(double)i.shape.getVertices()[2].y - (double)i.shape.getVertices()[0].y);
+        */
         $.restore();
+        
+    	
     }
 
     private Context2d getContext() {
@@ -155,5 +167,9 @@ public class DrawingManager {
                 getCanvasHeight());
         showCanvas.getContext2d()
                 .drawImage(drawCanvas.getCanvasElement(), 0, 0);
+    }
+
+	public void removeFromDrawList(PixelBlock objToAdd) {
+        drawList.remove(objToAdd);
     }
 }
